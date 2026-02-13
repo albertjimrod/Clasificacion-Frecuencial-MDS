@@ -166,9 +166,15 @@ El script original usaba `graph.tree()`, que crea una estructura de árbol arbit
 - Reorganizado en secciones numeradas con un flujo lineal claro.
 - Añadido `parallel = 4` en la cross-correlation para mejor rendimiento.
 
-## Origen
+## Origen y contexto académico
 
-Este proyecto tiene su origen en el Trabajo de Fin de Máster (TFM) del Máster en Business Intelligence y Data Science de IEBS, titulado *"Machine Learning applied to Sound Design"* (octubre 2020), por Alberto Jiménez Rodríguez.
+Este proyecto es el resultado del Trabajo de Fin de Máster (TFM) del [Máster en Business Intelligence y Data Science de IEBS](https://accounts.iebschool.com/mi-diploma/abaa0886b52591b851a33c17b4653f20/) (octubre 2020), por Alberto Jiménez Rodríguez.
+
+El máster estaba orientado al ámbito empresarial y de emprendimiento. Sin embargo, al no tener experiencia directa en ese campo, opté por trasladar los conceptos aprendidos a un dominio que conozco en profundidad: el audio y el diseño de sonido. La premisa era sencilla: si las técnicas de Machine Learning sirven para clasificar clientes, productos o patrones de mercado, también pueden aplicarse para clasificar muestras de sonido según sus propiedades frecuenciales.
+
+Esta analogía no es forzada sino todo lo contrario. La reducción de dimensionalidad, el cálculo de distancias y la visualización de similitudes son herramientas agnósticas al dominio. Funcionan igual con datos financieros, genéticos o acústicos. Lo que cambia es la fuente de datos y la interpretación de los resultados, no la metodología.
+
+El resultado es un proyecto que demuestra la aplicación práctica de MDS y cross-correlation MFCC a un problema real del flujo de trabajo en diseño de sonido: identificar redundancias y relaciones de similitud dentro de grandes colecciones de muestras de audio.
 
 ## Licencia
 
