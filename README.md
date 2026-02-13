@@ -18,9 +18,11 @@ Analiza un conjunto de archivos de audio WAV (efectos de sonido 8-bit de videoju
 4. **Multidimensional Scaling (MDS)** — reduce esas distancias a 2 dimensiones para poder visualizarlas.
 5. **Visualización** — boxplots por categoría, grafo de similitud y scatter plot MDS.
 
-## ¿Cómo interpretar los resultados?
+## Resultados
 
-### El scatter plot MDS
+### Scatter plot MDS
+
+![Scatter MDS](Scatter%20MDS.png)
 
 Imagina que cada sonido es una "receta" con muchos ingredientes (frecuencia media, entropía, pico espectral, etc.). Con más de 20 ingredientes, no se pueden visualizar directamente.
 
@@ -30,7 +32,17 @@ Es como un mapa de ciudades: no necesitas saber la latitud y longitud exactas, s
 
 **Importante:** Los ejes (V1, V2) no representan nada concreto. No es "derecha = agudos" ni "arriba = graves". Son coordenadas abstractas. Si rotaras el gráfico 90°, sería igualmente válido. La información está en las **distancias relativas** entre puntos, no en su posición absoluta.
 
-### Los boxplots por categoría
+En este gráfico se observa:
+- Los **Gunner** (disparos) se agrupan en la zona inferior izquierda: son variaciones del mismo tipo de sonido.
+- Los **Digital_Life_Forms** forman su propio cluster a la derecha, alejados del resto.
+- Los **Photon Canyon** están aislados arriba a la derecha: son sonidos únicos en la colección.
+- **Level**, **Scanner** y **Teletransport** se mezclan en la zona central-superior, compartiendo características frecuenciales similares.
+
+---
+
+### Boxplots por categoría
+
+![Boxplots por categoría](category_Boxplots.png)
 
 Muestran cómo se distribuye cada parámetro acústico dentro de cada categoría de sonido. Permiten:
 
@@ -38,7 +50,16 @@ Muestran cómo se distribuye cada parámetro acústico dentro de cada categoría
 - **Evaluar la varianza**: si un parámetro tiene poca dispersión, no aporta capacidad discriminante al modelo.
 - **Entender el MDS**: las categorías que se parecen en estos parámetros estarán cercanas en el mapa 2D.
 
-### El grafo de similitud
+Observaciones destacadas:
+- **Scanner** tiene la frecuencia media más alta (~11 kHz) y un pico del espectro enorme (~2000): es un sonido agudo con un pico espectral muy marcado.
+- **ocean** tiene frecuencia media baja y entropía espectral baja: es un sonido más "plano" y grave.
+- **Teletransport** presenta las cajas más anchas en casi todos los parámetros: es la categoría con mayor diversidad acústica interna.
+
+---
+
+### Grafo de similitud acústica
+
+![Grafo de similitud](similitud_muestras.png)
 
 A diferencia del scatter plot, el grafo muestra **explícitamente quién suena parecido a quién**:
 
@@ -46,6 +67,12 @@ A diferencia del scatter plot, el grafo muestra **explícitamente quién suena p
 - **Líneas (edges)** = conexiones entre sonidos con correlación MFCC superior al 75%. Si dos nodos están conectados, suenan parecido.
 - **Posición** = determinada por MDS, igual que el scatter.
 - **Nodos aislados (sin líneas)** = sonidos acústicamente únicos en la colección.
+
+Observaciones destacadas:
+- El **centro** tiene un núcleo muy conectado (Scanner, ocean, Teletransport, Freezing...): son los sonidos más "genéricos" del pack que comparten características frecuenciales.
+- Los **Gunner** están agrupados a la derecha pero **sin conexiones con el centro**: suenan parecido entre sí pero son acústicamente distintos al resto.
+- **Photon Canyon** está aislado arriba: ambas muestras se conectan entre sí pero con nada más.
+- **Digital_Life_Forms (1)** está completamente aislado: es el sonido más diferente de toda la colección.
 
 ## Estructura del proyecto
 
@@ -58,8 +85,6 @@ Clasificacion-Frecuencial-MDS/
 ├── category_Boxplots.png           # Boxplots por categoría
 ├── similitud_muestras.png          # Grafo de similitud acústica
 ├── Scatter MDS.png                 # Scatter plot MDS
-├── Rplot.png                       # Plot de dispersión correlación
-├── Rplot_correlation.png           # Plot de correlación
 └── TFM_iebs/                       # Proyecto TFM original
     ├── Data/
     │   └── 8bits/                  # 55 archivos WAV (no incluidos, ver instalación)
