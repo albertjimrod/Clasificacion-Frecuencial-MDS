@@ -1,0 +1,56 @@
+
+[SUMMARY...............................................................3](#summary)
+\vspace{12pt}
+
+[INTRODUCTION........................................................4](#introduction)
+\vspace{12pt}
+
+[ESTATE OF ART.....................................................5](#state-of-art)
+\vspace{12pt}
+
+[OBJECTIVES.............................................................6](#objeCtives)
+\vspace{12pt}
+
+[PROPOSED SOLUTION...............................................7](#proposed-solution)
+\vspace{12pt}
+
+[Source code............................................................9](#code)
+    
+\vspace{12pt}
+
+
+1 [Samples and Analysis.....................................................11](#samples-and-analysis)
+
+  + 1.1 [Espectrograms................................................12](#espectrograms)
+
+  + 1.2 [Parameters.....................................................14](#acoustic-parameters-of-the-samples)
+
+
+
+2 [Define the model......................................................15](#define-the-model)
+
+  + 2.1 [Similarity matrix.............................................16](#create-the-similarity-matrix)
+
+  + 2.2 [Distance calculation...........................................16](#calculation-of-distances)
+
+  + 2.3 [Multidimensional scale......................................16](#multidimensional-scale)
+
+
+
+3  [Evaluate the model...17](#Evaluate-the-model)
+
+  + 3.1 [Visualization in a coordinate system.....................17](#visualization)
+
+\vspace{12pt}
+
+
+[CONCLUSIONS AND FUTURE WORK............................19](#conclusions-and-future-work)
+\vspace{12pt}
+
+
+[RESULTs...........................................................21](#results)
+\vspace{12pt}
+
+
+[REFERENCES.........................................................23](#references)
+

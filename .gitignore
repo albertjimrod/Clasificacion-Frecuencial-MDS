@@ -1,0 +1,13 @@
+# Audio
+*.wav
+*.zip
+
+# R artifacts
+.Rhistory
+.RData
+*.RData
+.Rproj.user/
+
+# OS
+.DS_Store
+Thumbs.db

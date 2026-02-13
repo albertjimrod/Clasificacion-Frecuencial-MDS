@@ -1,0 +1,884 @@
+---
+title: FREQUENCY CLASSIFICATION OF SOUND SAMPLES THROUGH DIMENSIONALITY REDUCTION 
+AND THE MULTIDIMENSIONAL SCALING
+author: "Alberto Jimenez"
+date: "oct/05/2020"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment = NA)
+ fig.cap = NULL
+```
+
+
+[//]: <> (Primera pagina.) 
+
+![image](/home/ion/Formacion/00_iebs/TFM_iebs/TFM_iebs/logo_iebs.jpg)
+
+\vspace{72pt}
+
+
+
+PROGRAM: 
+
+BUSSINESS INTELLIGENCE AND DATA SCIENCE MASTER
+
+\vspace{20pt}
+
+PROJECT NAME:	
+
+MACHINE LEARNING APPLIED TO SOUND DESIGN
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+
+
+
+# CONTENT 
+
+\vspace{60pt}
+
+
+
+[SUMMARY...............................................................3](#summary)
+\vspace{12pt}
+
+[INTRODUCTION........................................................4](#introduction)
+\vspace{12pt}
+
+[ESTATE OF ART.....................................................5](#state of art)
+\vspace{12pt}
+
+[OBJECTIVES.............................................................6](#objectives)
+\vspace{12pt}
+
+[PROPOSED SOLUTION...............................................7](#proposed-solution)
+\vspace{12pt}
+
+[Source code............................................................9](#code)
+    
+\vspace{12pt}
+
+
+1 [Samples and Analysis.....................................................11](#samples-and-analysis)
+
+  + 1.1 [Espectrograms................................................12](#espectrograms)
+
+  + 1.2 [Parameters.....................................................14](#acoustic-parameters-of-the-samples)
+
+
+
+2 [Define the model......................................................15](#define-the-model)
+
+  + 2.1 [Similarity matrix.............................................16](#create-the-similarity-matrix)
+
+  + 2.2 [Distance calculation...........................................16](#calculation-of-distances)
+
+  + 2.3 [Multidimensional scale......................................16](#multidimensional-scale)
+
+
+
+3  [Evaluate the model...17](#Evaluate-the-model)
+
+  + 3.1 [Visualization in a coordinate system.....................17](#visualization)
+
+\vspace{12pt}
+
+
+[CONCLUSIONS AND FUTURE WORK............................19](#conclusions-and-future-work)
+\vspace{12pt}
+
+
+[RESULTs...........................................................21](#results)
+\vspace{12pt}
+
+
+[REFERENCES.........................................................23](#references)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+## SUMMARY
+
+\vspace{20pt}
+
+Exercise of approximation to one of the techniques of Machine Learning, through a set of audio samples. The objective is to apply a method of organization widely used in the branch of unsupervised learning and related to the reduction of dimensionality, this method of classification is done through multidimensional scaling.  
+
+
+Multidimensional scaling (MDS) allows visualization level of similarity of the individual elements of a set, one of the nonlinear dimension reductions. This multidimensional scaling technique will be carried out through the previous frequency analysis of each of the elements of the set obtaining the difference or similarity between the samples of our set at the frequency level.
+
+
+The MDS algorithm aims to place each object in an N-dimensional space so that the distances between the objects are maintained in the best possible way. Later each object is assigned coordinates in each of the N dimensions allowing visualize the result.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+## INTRODUCTION
+
+\vspace{30pt}
+
+In the audiovisual field, there is a professional profile called sound-designer. Dedicated to the building of sound effects with aim of narrating, generating emotions, portraying sound spaces, and ultimately creating a sound universe with a particular identity within the audiovisual context in which he is working. 
+
+\vspace{6pt}
+
+The result of this work is a methodical and artisanal work where the volume of sound files generated for the development of a project is usually enormous, so this can cause a loss of timbral perspective in the creative process because the greater the volume of samples, it is easy for the sounds to end up being similar and as result of this the originality of the work is reduced.
+
+\vspace{6pt}
+
+A tool that analyzes the samples (only from the frequency perspective) that the professional is working on determines whether or not exist similarities between them. Is a solution that would save time when making creative decisions since it will allow to establish what is the frequency predominance of the set and therefore knowing what is the timbral character of that group of samples.
+
+\vspace{6pt}
+
+The solution proposed to achieve this end is the application of one of the techniques seen in the Predictive Analysis with Machine Learning module (Diego Calvo), referring to multidimensional scaling.
+
+While it is true that the solution is not innovative, it does not claim to be either. It only seeks to implement the knowledge acquired in ML in the most original way possible avoiding the dependence on external datasets through a field such the audio in which I feel comfortable and being the most honest with what I learned in the course.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+## ESTATE-OF-ART
+
+\vspace{30pt}
+
+Sources that I have used as a starting point and in which the work inspired:
+
+
+\vspace{15pt}
+
+Practical class of Machine Learning of the Master of IEBS (Business Intelligence and Big Data) with Diego Calvo on the reduction of dimensionality and multidimensional scaling.
+
+\vspace{15pt}
+
+Case study in the research of Spix's disc-winged bats (Thyroptera tricolor), a library of functions called [warbleR](https://github.com/maRce10/warbleR).
+
+Thanks to [Marcelo Araya-Salas](https://github.com/maRce10)
+
+\vspace{15pt}
+
+[Sononym](https://www.sononym.net/)."audio sample navigator", utility that allows the cataloging of audio samples through the analysis of samples.
+
+I have not been able to find the scientific principles on which this software application is based, because it is part of the internal knowledge of a private company, however, the product refers to the analysis of the samples by Machine Learning to make the categorization of the samples.
+
+https://www.sononym.net/docs/manual/similarity-search/#similarity-ratings
+
+
+\vspace{45pt}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+
+## OBJECTIVES
+
+\vspace{30pt}
+
+Visualize the relationship between the elements of a set of sound samples and their frequencies.
+\vspace{12pt}
+
+The strategy to achieve this will be through the following points:
+\vspace{12pt}
+
+1. Take some samples as a reference and analyze their frequency content of them.
+
+
+2. Define a model:
+
+    + 2.1 Create the similarity matrix.
+    
+    + 2.2 Calculate the distances between the elements.
+    
+    + 2.3 Run multidimensional scaling.
+
+3. Evaluate the model:
+
+    + 3.1 Visualization in a coordinate system.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+## PROPOSED-SOLUTION
+
+\vspace{15pt}
+
+
+The methodology used will be based on comparing a set of audio samples as a reference that will allow verifying the correct functioning of the model.
+
+
+\vspace{60pt}
+
+![image](/home/ion/Formacion/git_repo_klone/personal_projects/Master_thesis/TFM_iebs/Script/Diagram.jpeg)
+
+
+
+\newpage
+
+
+Six audio samples have been created from the same source and with the following characteristics:
+
+
+|X_pitch-11.wav*            | Wave Object   |  
+|---------------------------|---------------| 
+|Number of Samples:         |   13020       |  
+|Duration (seconds):        |   0.295       | 
+|Samplingrate (Hertz):      |   44100       |  
+|Channels (Mono/Stereo):    |   Mono        | 
+|PCM (integer format):      |   TRUE        |
+|Bit (8/16/24/32/64):       |   16          |
+|Peak Freq                  | 96Hz@ -13,6dB | 
+|                           |               |
+
+|X_pitch-11_d.wav           | Wave Object     |  
+|---------------------------|-----------------| 
+|Peak Freq                  | 90Hz@ -7,4dB    |
+
+|X_pitch-11_dd.wav          | Wave Object     |  
+|---------------------------|-----------------|  
+|Peak Freq                  | 80Hz@ -4,4dB    |
+
+
+|X_pitch-22_d.wav           | Wave Object     |  
+|---------------------------|-----------------|  
+|Peak Freq                  | 182Hz@ -15,13dB |
+
+
+|X_pitch-11_dd.wav          | Wave Object     |  
+|---------------------------|-----------------|  
+|Peak Freq                  | 169Hz@ -8,7dB   |
+
+
+|X_pitch-11_dd.wav          | Wave Object     |  
+|---------------------------|-----------------|  
+|Peak Freq                  | 147Hz@ -5,2dB   |
+
+
+The duration of the samples is the same the reason is to avoid the lengths of different samples altering the results of the frequency analysis, to emphasize that the reason why the samples are so serious is that in such a low-frequency range it allows adding higher frequencies through the distortion effect.
+
+The elements of our test set are two groups of samples that start from a common origin. "**X_pitch-11.wav**":
+
+The first group of samples refers to those having the nomenclature **X_pitch-11_xx** samples only modified at the harmonic level by a distortion effect applied in **X_pitch-11_d** couples of times in **X_pitch-11_dd** with the same distortion parameters.
+
+The second group of samples is **X_pitch-22_xx** samples previously modified the frequency to X_pitch-11  and distorting the sample sound with the same distortion parameters applied in the first group.
+
+With this set, it is intended to visualize the operation of our model with special emphasis on the frequency relationship between the samples with and without distortion.
+
+
+
+
+
+\vspace{15pt}
+
+
+\newpage
+
+## CODE
+
+``` {r 01 Instalación de librerias, echo=TRUE, eval=TRUE, warning=FALSE, message = FALSE}
+
+library(tuneR)
+library(knitr)
+library(NatureSounds)
+library(seewave)
+library(warbleR) 
+library(igraph) 
+library(imager) 
+```
+
+
+```{r 02 Carga de las muestras en el espacio de trabajo, eval=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
+setwd("~/Formacion/git_repo_klone/personal_projects/Master_thesis/TFM_iebs/Script")
+
+todas_las_muestras <- selection_table(whole.recs = TRUE, extended = TRUE)
+```
+
+
+```{r 03 Parametros acusticos, echo=TRUE, eval=TRUE, warning=FALSE}
+sample_acoust_param <- na.omit(specan(todas_las_muestras, wl = 512, fsmooth = 0.1, 
+                                      threshold = 10, wn = "hanning",
+                                      flim = c(0, 22), bp = c(0,20), 
+                                      fast.spec = FALSE, ovlp = 50, 
+                                      pal = reverse.gray.colors.2,
+                                      widths = c(2, 1), main = NULL, 
+                                      plot = TRUE, all.detec = FALSE)) 
+```
+
+
+```{r 04 Xcorr , eval=TRUE, echo=TRUE, warning=FALSE}
+xcor <- xcorr(todas_las_muestras, bp = c(0, 20), wl = 512, ovlp = 99, path = NULL,
+              type = "mfcc", method= 1, na.rm = TRUE)
+```
+
+
+```{r 05 Matriz de similaridad , echo=TRUE, eval=TRUE,warning=FALSE}
+distancia <- dist(xcor, method = "euclidean")
+```
+
+
+```{r 06 PCA, echo=TRUE, eval=TRUE,warning=FALSE}
+valores <- cmdscale(distancia, eig = T)
+```
+
+
+```{r 07 PLOT-1 , echo=TRUE, eval=FALSE,warning=FALSE}
+old.par <- par(mfrow=c(1, 2))
+
+#plot(modelo, type = "p", xlab = "Coord 1", ylab = "Coord 2")
+plot(xcor, type = "p", xlab = "Coord 1", ylab = "Coord 2")
+text(xcor[,1],xcor[,2], labels = rownames(xcor), pos = 2, cex = 0.8 )
+matplot(xcor, lty = 1)
+
+par(old.par)
+```
+
+
+```{r 08 PLOT-2, echo=TRUE, eval=FALSE,warning=FALSE}
+plot(sample_acoust_param$dfrange)
+title(main = "frecuencia dominante", cex = 1.5,col = "red", font = 3)
+```
+
+```{r 09 PLOT-3, echo=TRUE, eval=FALSE,warning=FALSE}
+old.par <- par(mfrow=c(2, 3))
+
+plot(sample_acoust_param$meanfreq)
+title(main = "Frecuencia media", cex = 1.5,col = "red", font = 3)
+
+plot(sample_acoust_param$sd)
+title(main = "desviación estandar", cex = 1.5,col = "red", font = 3)
+
+plot(sample_acoust_param$skew)
+title(main = "asimetria", cex = 1.5,col = "red", font = 3)
+
+plot(sample_acoust_param$kurt)
+title(main = "Pico del espectro", cex = 1.5,col = "red", font = 3)
+
+plot(sample_acoust_param$sp.ent) 
+title(main = "entropía espectral", cex = 1.5,col = "red", font = 3)
+
+plot(sample_acoust_param$dfrange)
+title(main = "frecuencia dominante", cex = 1.5,col = "red", font = 3)
+
+par(old.par)
+```
+
+
+
+```{r, echo=FALSE, eval=FALSE,warning=FALSE}
+valores$eig
+```
+
+
+```{r, echo=FALSE, eval=FALSE,warning=FALSE}
+valores$GOF
+```
+
+```{r,  echo=TRUE, eval=FALSE,warning=FALSE}
+
+graf <- graph.tree(ncol(xcor),mode = c("in"))
+V(graf)$label <- colnames(xcor)
+
+layout <- layout.mds(graf, dist = as.matrix(distancia))
+
+plot(graf, vertex.size = .1)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+
+## 1 Samples-and-analysis
+
+Visualizamos las muestras cargadas en el espacio de trabajo
+
+
+
+```{r 02b Muestras del espacio de trabajo, echo=TRUE, warning=FALSE}
+todas_las_muestras 
+```
+
+
+\newpage
+
+## 1.1 Espectrograms
+
+Representación en tres dimensiones, temporal, frecuencial y amplitud de la distribución de energía de una señal.
+
+El espectrograma es el resultado de calcular la distribución de las amplitudes para cada frecuencia de un fenómeno ondulatorio que sea lal superposición de ondas de varias frecuencias de tramas de una señal. Una gráfica tridimensional que representa la energía del contenido frecuencial de la señal según va variando a lo largo del tiempo.
+
+
+![X_pitch-11.png](/home/ion/Formacion/git_repo_klone/personal_projects/Master_thesis/TFM_iebs/Script/X_pitch-11.png)
+
+\vspace{15pt}
+
+
+\newpage
+
+##  1.2 Acoustic-parameters-of-the-samples
+
+```{r 03b Parametros acusticos, echo=TRUE, eval=TRUE, warning=FALSE}
+head(sample_acoust_param,6)
+
+```
+
+**duration**: longitud de la señal en segundos.
+
+\vspace{6pt}
+
+**meanfreq**: frecuencia media (en kHz). Media del espectro de frecuencias (es decir, media ponderada de la frecuencia por la amplitud dentro del paso de banda suministrado). 
+
+\vspace{6pt}
+
+**sd**: Desviación estándar de la frecuencia (en kHz).
+
+\vspace{6pt}
+
+**freq.median**: frecuencia media. La frecuencia en la que la señal se divide en dos intervalos de frecuencia de igual energía (en kHz).
+
+\vspace{6pt}
+
+**freq.Q25**: la primera frecuencia de cuartil. La frecuencia en la que la señal se divide en dos intervalos de frecuencia de 25% y 75% de energía respectivamente (en kHz).
+
+\vspace{6pt}
+
+**freq.Q75**: frecuencia del tercer cuartil. La frecuencia en la que la señal se divide en dos intervalos de frecuencia de 75% y 25% de energía respectivamente (en kHz). 
+
+\vspace{6pt}
+
+**freq.IQR**: rango de frecuencia intercuartil. Gama de frecuencias entre 'freq.Q25' y 'freq.Q75' (en kHz).
+
+\vspace{6pt}
+
+**time.median**: tiempo medio. El tiempo en el que la señal se divide entre dos intervalos.
+
+\vspace{6pt}
+
+**time.Q25**: el primer tiempo de cuartil. El tiempo en el que la señal se divide en dos intervalos de tiempo de 25% y 75% de energía respectivamente (en s).
+
+\vspace{6pt}
+
+**time.Q75**: el tiempo del tercer cuartil. El tiempo en el que la señal se divide en dos intervalos de tiempo de 75% y 25% de energía respectivamente (en s).
+
+\vspace{6pt}
+
+**time.IQR**: rango de tiempo intercuartílico. Rango de tiempo entre "tiempo.Q25" y "tiempo.Q75" (en s).
+
+\vspace{6pt}
+
+**skew**: asimetría. Asimetría del espectro.
+
+\vspace{6pt}
+
+**kurt**: Picos del espectro
+
+\vspace{6pt}
+
+**sp.ent**: Distribución energética del espectro de frecuencias. Tono puro ~ 0; ruidoso ~ 1.
+
+\vspace{6pt}
+
+**time.ent**: entropía del tiempo. Distribución de la energía en la envoltura del tiempo. Tono puro ~ 0; ruidoso ~ 1.
+
+\vspace{6pt}
+
+**entropy**:  entropía espectrográfica. Producto del tiempo y la entropía espectral **sp.ent * time.ent**.       
+
+\vspace{6pt}
+
+**sfm**: planitud espectral. Similar a sp.ent (Tono puro ~ 0; ruidoso ~ 1).
+
+\vspace{6pt}
+
+**meandom**: promedio de la frecuencia dominante medida a través de la señal acústica.  
+
+\vspace{6pt}
+
+**mindom**: mínimo de la frecuencia dominante medida a través de la señal acústica.
+
+\vspace{6pt}
+
+**maxdom**: máximo de la frecuencia dominante medida a través de la señal acústica.
+
+\vspace{6pt}
+
+**dfrange**: rango de frecuencia dominante medido a través de la señal acústica.
+
+\vspace{6pt}
+
+**modindx**: índice de modulación. Calculado como la diferencia absoluta acumulada entre las mediciones adyacentes de las frecuencias dominantes dividida por la gama de frecuencias dominantes. 1 significa que la señal no está modulada , 0 que sí lo está.
+
+\vspace{6pt}
+
+**startdom**: medición de la frecuencia dominante al inicio de la señal.
+
+\vspace{6pt}
+
+**enddom**: medición de la frecuencia dominante al final de la señal.
+
+\vspace{6pt}
+
+**dfslope**: pendiente del cambio de la frecuencia dominante a través del tiempo ((enddom-startdom)/duración). Las unidades son kHz/s.
+
+\vspace{6pt}
+
+**meanpeakf**: frecuencia media de pico. Frecuencia con la mayor energía del espectro de frecuencia media.
+
+\vspace{6pt}
+
+## 2 Define-the-model:
+
+En el procesamiento de señales, la correlación cruzada (o a veces denominada "covarianza cruzada") es una medida de la similitud entre dos señales, frecuentemente usada para encontrar características relevantes en una señal desconocida por medio de la comparación con otra que sí se conoce. Es una función del tiempo relativa a las señales, a veces también se la llama producto escalar desplazado, y tiene aplicaciones en el reconocimiento de patrones y en criptoanálisis de las muestras sonoras por medio de la correlación cruzada tiempo-frecuencia.
+
+Primero se crean las matrices (manteniéndolas internamente como una lista) y se calcula la correlación cruzada en un segundo paso.
+
+El cepstrum de frecuencia de mel (MFC) es una representación del espectro de potencia a corto plazo de un sonido, basado en una transformación coseno lineal de un espectro de potencia logarítmica en una escala de frecuencia de mel no lineal.
+\newpage
+
+## 2.1 Matriz de similitud
+
+```{r 04b Xcorr , eval=TRUE, echo=TRUE, warning=FALSE}
+xcor 
+```
+## 2.3 Calculo de las distancias
+
+Medida de distancia especificada para calcular las distancias entre las filas de una matriz de datos.
+
+```{r 05b Matriz de similaridad , echo=TRUE, eval=TRUE, warning=FALSE}
+distancia
+```
+
+## 2.3 Escalado multidimensional
+
+Escalamiento multidimensional (MDS) de una matriz de datos. También conocido como análisis de coordenadas principales.
+```{r 06b PCA, echo=TRUE, eval=TRUE,warning=FALSE}
+ 
+valores_distancia <- as.data.frame(valores$points)
+```
+
+\newpage
+
+## 3 Evaluar el modelo
+
+## 3.1 Visualizacion
+ 
+
+En esta primera representación vemos la disposición de los elementos de nuestro conjunto en un espacio bidimensional indicando cual es la similitud frecuencial que existe entre las muestras. 
+
+
+Representación de los valores de la matriz de correlación
+
+```{r 3.1 Visualizacion en un sistema de coordenadas , echo=FALSE, eval=TRUE,warning=FALSE}
+plot(valores_distancia, type = "p", xlab = "Coord 1", ylab = "Coord 2")
+text(valores_distancia[,1],valores_distancia[,2], labels = colnames(valores_distancia), pos = 4, cex = 0.8, offset = 0.2)
+
+```
+
+
+
+Únicos elementos (V1 y V2) que reprentan al conjunto de muestras tras haber sido analizado.
+
+\newpage
+
+## CONCLUSIONES 
+
+
+El objetivo inicial de visualizar las diferencias frecuencial entre los elementos de un conjunto mediante el escalamiento multidimensional ha sido llevado a buen término.
+
+El analisis de la relación frecuencial a partir del conjunto de muestras nos ha dotado de un dataset de datos unico. 
+
+Se ha observado que dado que el ejercicio es muy sencillo y no incluye elementos que tengan en cuenta la duración de las muestras, es necesario que las muestras tengan la misma duración ya que es muy importante a la hora de hacer la correlación frecuencial cruzada y no interferir en el resultado.
+
+
+\vspace{45pt}
+
+```{r 09b PLOT-3, echo=FALSE, eval=TRUE,warning=FALSE}
+old.par <- par(mfrow=c(1, 3))
+
+
+plot(sample_acoust_param$dfrange)
+title(main = "frecuencia dominante", cex = 1.5,col = "red", font = 3)
+
+plot(sample_acoust_param$meanfreq)
+title(main = "Frecuencia media", cex = 1.5,col = "red", font = 3)
+
+plot(sample_acoust_param$sd)
+title(main = "desviación standar", cex = 1.5,col = "red", font = 3)
+
+par(old.par)
+```
+
+```{r 3.1 Visualizacion en un sistema de coordenadas xcorr, echo=FALSE, eval=TRUE,warning=FALSE}
+plot(xcor, type = "p", xlab = "Coord 1", ylab = "Coord 2")
+text(xcor[,1],xcor[,2], labels = colnames(xcor), pos = 3.2, cex = 0.6, offset = -0.4)
+```
+Esta es la representación gráfica de los elementos de la matríz de correlación  
+
+
+Las muestras a las que no se les a doblado la frequencia **X_pitch-11.wav, X_pitch-11_d.wav, X_pitch-11_dd.wav** en la parte inferior izquierda y aquellas a las que si se les ha modificado la frecuencia **X_pitch-22.wav X_pitch-22_d.wav X_pitch-22_dd.wav** y se encuentran mas a la derecha del gráfico. 
+
+Cabe destacar que ambos grupos de muestras comparten el mismo indice de distorsión en las muestras y que debido a ello se puede verse claramente reflejado en el eje de coordenadas 2. 
+
+
+
+```{r 07b PLOT-2 , echo=FALSE, eval=TRUE,warning=FALSE}
+matplot(xcor, type = "o",lty = 1:8, lwd = 1 )
+```
+
+Cada una de las columnas de la matríz de correlación es comparada contra las demás columnas de la matriz, cada columna representa una muestra de sonido.
+
+Se aprecia que la distorsión máxima que se le ha aplicado a las muestras influyen en el resultado a nivel frecuencial, esto se puede observar en la 2 columna y en la 5, ya que es donde mayor diferencia (son las más distorsionadas) entre las muestras del mismo grupo.
+
+Conforme más arriba en la columna esté la muestra que comparamos más parecido tendrá ese sonido con la muestra comparada.
+
+Se observa que existe una mayor similitud entre la muestra 1 X_pitch-11_d.wav (columna) y las muestras X_pitch-11_dd.wav (2) y X_pitch-11.wav (3) que entre X_pitch-11_d.wav (1) y las muestras X_pitch-22_d.wav (4), X_pitch-22_dd.wav (5) y X_pitch-22.wav (6).
+
+
+```{r 08b PLOT-2 colorines, echo=FALSE, eval=TRUE,warning=FALSE}
+plot(valores_distancia, type = "p", xlab = "Coord 1", ylab = "Coord 2")
+text(valores_distancia[,1],valores_distancia[,2], labels = colnames(xcor), pos = 3.2, cex = 0.5, offset = -0.4)
+```
+
+Observamos dos grupos claramente diferenciados gracias al análisis de las coordenadas principales (PCA).
+
+
+\newpage
+## RESULTADOS
+
+Para evaluar el modelo le pasaré una libreria de sonido de 8 bits que hice hace un tiempo y que contiene 172 elementos. 
+
+```{r sound_design 01, eval=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
+library(ggplot2)
+library(ggfortify)
+
+  alles_dir <- "/home/ion/Formacion/00_iebs/TFM_iebs/TFM_iebs/Data/8bits"
+
+wav_names <- list.files(alles_dir, pattern = "\\.wav$")
+
+sound_design <- selection_table(whole.recs = TRUE, path = alles_dir, extended = TRUE)
+
+xcor <- xcorr(sound_design, bp = c(0, 20), wl = 512, ovlp = 99, path = alles_dir,
+              type = "mfcc", method= 1, na.rm = TRUE,
+              parallel = 4)
+
+distancia <- dist(xcor, method = "euclidean")
+  
+valores <- cmdscale(distancia, eig = T)
+
+
+
+autoplot(cmdscale(distancia, eig = T), label = TRUE, label.size = 3, frame = TRUE)
+
+```
+
+
+Vemos que hay muestras que estan mas "juntas", estas son aquellas que tienen una mayor similitud frecuencial entre ellas. Llegados a este punto dariamos por concluida la busqueda de una herramienta que nos permitiera saber cual es la predominancia frecuencial de nuestra libreria de sonidos.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\vspace{15pt}
+
+
+
+
+
+\newpage
+## REFERENCIAS
+
+\vspace{15pt}
+
+
+
+Araya-Salas, M. and Smith-Vidaurre, G. (2017), warbleR: an r package to streamline analysis of animal acoustic signals. Methods Ecol Evol. 8, 184-191.
+
+Maechler, M., Rousseeuw, P., Struyf, A., Hubert, M., Hornik, K.(2019).  cluster: Cluster Analysis Basics and Extensions. R package
+  version 2.1.0
+  
+NOTE: please also cite the 'tuneR' and 'seewave' packages if you use any spectrogram-creating  or acoustic-measuring function
+  
+
+Uwe Ligges, Sebastian Krey, Olaf Mersmann, and Sarah Schnackenberg (2018). tuneR: Analysis of Music and Speech. URL: https://CRAN.R-project.org/package=tuneR
+
+
+Yihui Xie (2020). knitr: A General-Purpose Package for Dynamic Report Generation in R. R package version 1.30.
+
+  Yihui Xie (2015) Dynamic Documents with R and knitr. 2nd edition. Chapman and Hall/CRC. ISBN 978-1498716963
+
+  Yihui Xie (2014) knitr: A Comprehensive Tool for Reproducible Research in R. In Victoria Stodden, Friedrich Leisch and Roger D. Peng,
+  editors, Implementing Reproducible Computational Research. Chapman and Hall/CRC. ISBN 978-1466561595
+  
+
+Araya-Salas, M. (2018), *NatureSounds: a collection of animal sound for bioacoustic analysis in the R environment*. R package version
+  1.1.0.
+
+Sueur J, Aubin T, Simonis C (2008). seewave: a free modular tool for sound analysis and synthesis. Bioacoustics, 18: 213-226
+
+Araya-Salas, M. and Smith-Vidaurre, G. (2017), warbleR: an r package to streamline analysis of animal acoustic signals. Methods Ecol
+  Evol. 8, 184-191.
+
+  
+
