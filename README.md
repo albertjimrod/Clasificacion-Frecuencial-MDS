@@ -1,181 +1,181 @@
-# Clasificación frecuencial de muestras de audio mediante MDS
+# Frequency Classification of Audio Samples via MDS
 
-## Descripción del proyecto
+## Background
 
-En el campo audiovisual existe un perfil profesional conocido como [diseñador de sonido](https://www.studiobinder.com/blog/what-does-a-sound-designer-do/). Este profesional se dedica a la creación de efectos sonoros con el objetivo de narrar, personificar, generar emociones, retratar espacios sonoros, épocas y, en definitiva, crear un universo sonoro con una identidad particular dentro del contexto audiovisual en el que trabaja.
+This project is the result of the Master's Thesis (TFM) for the [Master in Business Intelligence and Data Science at IEBS](https://accounts.iebschool.com/mi-diploma/abaa0886b52591b851a33c17b4653f20/) (October 2020), by Alberto Jiménez Rodríguez.
 
-El resultado de este trabajo es un proceso metódico y artesanal donde el volumen de archivos de sonido generados puede llegar a ser enorme. Esto puede provocar una pérdida de perspectiva tímbrica en el proceso creativo: cuanto mayor es el volumen de muestras, más fácil es que algunos sonidos terminen siendo similares entre sí, disminuyendo la originalidad del trabajo.
+The master's program was focused on business and entrepreneurship. However, rather than working within a domain I had no direct experience in, I chose to apply the concepts learned to a field I know deeply: audio and sound design. The premise was straightforward — if Machine Learning techniques can classify customers, products or market patterns, they can equally classify sound samples based on their frequency properties.
 
-**Una herramienta que analice las muestras desde la perspectiva frecuencial y determine si existe similitud entre ellas es una solución que ahorra tiempo en decisiones de naturaleza creativa.** Permite establecer cuál es la predominancia frecuencial del conjunto y, por tanto, conocer el carácter tímbrico de ese grupo de muestras.
+This is not a forced analogy. Dimensionality reduction, distance calculation and similarity visualization are domain-agnostic tools. They work the same way with financial data, genetic data or acoustic data. What changes is the data source and the interpretation of the results, not the methodology.
 
-## ¿Qué hace este proyecto?
+The outcome is a project that demonstrates the practical application of MDS and MFCC cross-correlation to a real problem in sound design workflows: identifying redundancies and similarity relationships within large audio sample collections.
 
-Analiza un conjunto de archivos de audio WAV (efectos de sonido 8-bit de videojuegos) y visualiza sus relaciones de similitud acústica. El pipeline es:
+## Project Description
 
-1. **Extracción de parámetros acústicos** — frecuencia media, desviación estándar, asimetría, curtosis, entropía espectral, rango de frecuencia dominante, etc.
-2. **Cross-correlation MFCC** — compara cada par de sonidos mediante coeficientes cepstrales en frecuencia Mel (la misma técnica usada en reconocimiento de voz).
-3. **Cálculo de distancias euclidianas** — transforma la matriz de correlación en distancias numéricas.
-4. **Multidimensional Scaling (MDS)** — reduce esas distancias a 2 dimensiones para poder visualizarlas.
-5. **Visualización** — boxplots por categoría, grafo de similitud y scatter plot MDS.
+In the audiovisual industry, the [sound designer](https://www.studiobinder.com/blog/what-does-a-sound-designer-do/) is responsible for creating sound effects that narrate, personify, generate emotions, portray sonic spaces, eras, and ultimately build a sound universe with a distinct identity within an audiovisual context.
 
-## Resultados
+This work is methodical and artisanal, and the volume of sound files generated for a project can be enormous. This can lead to a loss of timbral perspective in the creative process: the larger the collection, the easier it is for sounds to become similar to each other, diminishing the originality of the work.
 
-### Scatter plot MDS
+**A tool that analyzes samples from a frequency perspective and determines whether similarity exists between them saves time in creative decision-making.** It reveals the frequency predominance of the set and therefore the timbral character of that group of samples.
 
-![Scatter MDS](Scatter%20MDS.png)
+## What Does This Project Do?
 
-Imagina que cada sonido es una "receta" con muchos ingredientes (frecuencia media, entropía, pico espectral, etc.). Con más de 20 ingredientes, no se pueden visualizar directamente.
+It analyzes a set of WAV audio files (8-bit video game sound effects) and visualizes their acoustic similarity relationships. The pipeline is:
 
-**MDS coloca los sonidos en un mapa 2D de forma que los que suenan parecido quedan cerca y los que suenan diferente quedan lejos.**
+1. **Acoustic parameter extraction** — mean frequency, standard deviation, skewness, kurtosis, spectral entropy, dominant frequency range, etc.
+2. **MFCC cross-correlation** — compares each pair of sounds using Mel-Frequency Cepstral Coefficients (the same technique used in speech recognition).
+3. **Euclidean distance calculation** — transforms the correlation matrix into numerical distances.
+4. **Multidimensional Scaling (MDS)** — reduces those distances to 2 dimensions for visualization.
+5. **Visualization** — category boxplots, similarity graph and MDS scatter plot.
 
-Es como un mapa de ciudades: no necesitas saber la latitud y longitud exactas, solo que Madrid esté cerca de Toledo y lejos de Tokio. MDS hace lo mismo pero con sonidos.
+## Results
 
-**Importante:** Los ejes (V1, V2) no representan nada concreto. No es "derecha = agudos" ni "arriba = graves". Son coordenadas abstractas. Si rotaras el gráfico 90°, sería igualmente válido. La información está en las **distancias relativas** entre puntos, no en su posición absoluta.
+### MDS Scatter Plot
 
-En este gráfico se observa:
-- Los **Gunner** (disparos) se agrupan en la zona inferior izquierda: son variaciones del mismo tipo de sonido.
-- Los **Digital_Life_Forms** forman su propio cluster a la derecha, alejados del resto.
-- Los **Photon Canyon** están aislados arriba a la derecha: son sonidos únicos en la colección.
-- **Level**, **Scanner** y **Teletransport** se mezclan en la zona central-superior, compartiendo características frecuenciales similares.
+![MDS Scatter Plot](Scatter%20MDS.png)
 
----
+Think of each sound as a "recipe" with many ingredients (mean frequency, entropy, spectral peak, etc.). With over 20 ingredients, direct visualization is impossible.
 
-### Boxplots por categoría
+**MDS places sounds on a 2D map so that similar-sounding ones are close together and different-sounding ones are far apart.**
 
-![Boxplots por categoría](category_Boxplots.png)
+It works like a city map: you don't need exact latitude and longitude, only that Madrid is close to Toledo and far from Tokyo. MDS does the same but with sounds.
 
-Muestran cómo se distribuye cada parámetro acústico dentro de cada categoría de sonido. Permiten:
+**Important:** The axes (V1, V2) have no concrete meaning. It's not "right = high-pitched" or "up = bass". They are abstract coordinates. If you rotated the chart 90 degrees, it would be equally valid. The information lies in the **relative distances** between points, not their absolute position.
 
-- **Detectar outliers**: sonidos acústicamente muy diferentes al resto de su grupo.
-- **Evaluar la varianza**: si un parámetro tiene poca dispersión, no aporta capacidad discriminante al modelo.
-- **Entender el MDS**: las categorías que se parecen en estos parámetros estarán cercanas en el mapa 2D.
-
-Observaciones destacadas:
-- **Scanner** tiene la frecuencia media más alta (~11 kHz) y un pico del espectro enorme (~2000): es un sonido agudo con un pico espectral muy marcado.
-- **ocean** tiene frecuencia media baja y entropía espectral baja: es un sonido más "plano" y grave.
-- **Teletransport** presenta las cajas más anchas en casi todos los parámetros: es la categoría con mayor diversidad acústica interna.
+Key observations:
+- **Gunner** samples (gunshot sounds) cluster in the lower left: they are variations of the same type of sound.
+- **Digital_Life_Forms** form their own cluster on the right, far from the rest.
+- **Photon Canyon** samples are isolated in the upper right: they are unique sounds in the collection.
+- **Level**, **Scanner** and **Teletransport** mix in the upper-central area, sharing similar frequency characteristics.
 
 ---
 
-### Grafo de similitud acústica
+### Category Boxplots
 
-![Grafo de similitud](similitud_muestras.png)
+![Category Boxplots](category_Boxplots.png)
 
-A diferencia del scatter plot, el grafo muestra **explícitamente quién suena parecido a quién**:
+These show how each acoustic parameter is distributed within each sound category. They allow you to:
 
-- **Nodos** = archivos de sonido, coloreados por categoría.
-- **Líneas (edges)** = conexiones entre sonidos con correlación MFCC superior al 75%. Si dos nodos están conectados, suenan parecido.
-- **Posición** = determinada por MDS, igual que el scatter.
-- **Nodos aislados (sin líneas)** = sonidos acústicamente únicos en la colección.
+- **Detect outliers**: sounds that are acoustically very different from the rest of their group.
+- **Evaluate variance**: if a parameter has low dispersion, it provides no discriminant power to the model.
+- **Understand the MDS**: categories with similar parameters will be close together on the 2D map.
 
-Observaciones destacadas:
-- El **centro** tiene un núcleo muy conectado (Scanner, ocean, Teletransport, Freezing...): son los sonidos más "genéricos" del pack que comparten características frecuenciales.
-- Los **Gunner** están agrupados a la derecha pero **sin conexiones con el centro**: suenan parecido entre sí pero son acústicamente distintos al resto.
-- **Photon Canyon** está aislado arriba: ambas muestras se conectan entre sí pero con nada más.
-- **Digital_Life_Forms (1)** está completamente aislado: es el sonido más diferente de toda la colección.
+Key observations:
+- **Scanner** has the highest mean frequency (~11 kHz) and an enormous spectral peak (~2000): it is a sharp sound with a very pronounced spectral peak.
+- **ocean** has low mean frequency and low spectral entropy: it is a "flatter", deeper sound.
+- **Teletransport** has the widest boxes across almost all parameters: it is the category with the greatest internal acoustic diversity.
 
-## Estructura del proyecto
+---
+
+### Acoustic Similarity Graph
+
+![Similarity Graph](similitud_muestras.png)
+
+Unlike the scatter plot, the graph explicitly shows **which sounds are similar to which**:
+
+- **Nodes** = sound files, colored by category.
+- **Edges** = connections between sounds with MFCC correlation above 75%. If two nodes are connected, they sound alike.
+- **Position** = determined by MDS, same as the scatter plot.
+- **Isolated nodes (no edges)** = acoustically unique sounds in the collection.
+
+Key observations:
+- The **center** has a densely connected core (Scanner, ocean, Teletransport, Freezing...): these are the most "generic" sounds in the pack, sharing frequency characteristics.
+- **Gunner** samples are grouped on the right but **with no connections to the center**: they sound similar to each other but are acoustically distinct from everything else.
+- **Photon Canyon** is isolated at the top: both samples connect to each other but to nothing else.
+- **Digital_Life_Forms (1)** is completely isolated: it is the most different sound in the entire collection.
+
+## Project Structure
 
 ```
 Clasificacion-Frecuencial-MDS/
-├── Frecuencial_classification.R    # Script principal de análisis
+├── Frecuencial_classification.R    # Main analysis script
 ├── README.md
 ├── .gitignore
-├── Clasificación_frecuencial.pdf   # Documento del TFM original
-├── category_Boxplots.png           # Boxplots por categoría
-├── similitud_muestras.png          # Grafo de similitud acústica
-├── Scatter MDS.png                 # Scatter plot MDS
-└── TFM_iebs/                       # Proyecto TFM original
+├── Clasificación_frecuencial.pdf   # Original thesis document
+├── category_Boxplots.png           # Category boxplots
+├── similitud_muestras.png          # Acoustic similarity graph
+├── Scatter MDS.png                 # MDS scatter plot
+└── TFM_iebs/                       # Original thesis project
     ├── Data/
-    │   └── 8bits/                  # 55 archivos WAV (no incluidos, ver instalación)
-    └── Script/                     # Scripts y documentación original del TFM
+    │   └── 8bits/                  # 55 WAV files (not included, see setup)
+    └── Script/                     # Original scripts and documentation
 ```
 
-## Instalación y ejecución
+## Setup and Execution
 
-### Requisitos
+### Requirements
 
-- R 4.0 o superior
-- Los paquetes listados a continuación
+- R 4.0 or higher
+- The packages listed below
 
-### 1. Instalar dependencias
+### 1. Install dependencies
 
 ```r
 install.packages(c("tuneR", "seewave", "warbleR", "NatureSounds",
                     "igraph", "cluster", "ggplot2", "ggfortify"))
 ```
 
-### 2. Preparar los datos
+### 2. Prepare the data
 
-Los archivos WAV no están incluidos en el repositorio por su tamaño. Coloca tus archivos `.wav` en la carpeta `TFM_iebs/Data/8bits/`.
+WAV files are not included in the repository due to their size. Place your `.wav` files in the `TFM_iebs/Data/8bits/` folder.
 
-El script espera archivos con el formato `Nombre (número).wav` (por ejemplo: `Gunner (3).wav`, `Teletransport (1).wav`) para poder extraer las categorías automáticamente.
+The script expects files named as `Name (number).wav` (e.g., `Gunner (3).wav`, `Teletransport (1).wav`) to automatically extract categories.
 
-### 3. Ejecutar
+### 3. Run
 
-Abre R o RStudio con el directorio de trabajo en la raíz del proyecto y ejecuta:
+Open R or RStudio with the working directory set to the project root and execute:
 
 ```r
 source("Frecuencial_classification.R")
 ```
 
-## Metodología técnica
+## Technical Methodology
 
 ### Multidimensional Scaling (MDS)
 
-[MDS](https://ncss-wpengine.netdna-ssl.com/wp-content/themes/ncss/pdf/Procedures/NCSS/Multidimensional_Scaling.pdf) es una técnica que crea un mapa mostrando las posiciones relativas de un conjunto de objetos, dada únicamente una tabla de distancias entre ellos. El programa calcula la solución métrica o no métrica. La tabla de distancias se conoce como matriz de proximidad.
+[MDS](https://ncss-wpengine.netdna-ssl.com/wp-content/themes/ncss/pdf/Procedures/NCSS/Multidimensional_Scaling.pdf) is a technique that creates a map displaying the relative positions of a set of objects, given only a table of distances between them. The program computes either the metric or non-metric solution. The distance table is known as the proximity matrix.
 
 ### MFCC (Mel-Frequency Cepstral Coefficients)
 
-Los coeficientes cepstrales en frecuencia Mel son una representación del espectro de potencia a corto plazo de un sonido, basada en una escala que imita la percepción auditiva humana. Se utilizan aquí para calcular la correlación cruzada entre pares de muestras, generando una matriz de similitud.
+Mel-Frequency Cepstral Coefficients are a representation of the short-term power spectrum of a sound, based on a scale that mimics human auditory perception. They are used here to compute the cross-correlation between pairs of samples, generating a similarity matrix.
 
-### Pipeline de análisis
+### Analysis Pipeline
 
 ```
-WAV files → spectro_analysis() → parámetros acústicos → boxplots
-         → cross_correlation() → matriz MFCC → dist() → cmdscale() → scatter MDS
-                                             → similitud → grafo igraph
+WAV files → spectro_analysis() → acoustic parameters → boxplots
+         → cross_correlation() → MFCC matrix → dist() → cmdscale() → MDS scatter
+                                              → similarity → igraph network
 ```
 
-## Cambios respecto al proyecto original (TFM 2020)
+## Changes from the Original Project (2020)
 
-### Actualización de funciones de warbleR
+### warbleR Function Updates
 
-El paquete `warbleR` renombró varias funciones entre la versión usada en el TFM original (2020) y la versión actual. Los cambios necesarios fueron:
+The `warbleR` package renamed several functions between the version used in the original thesis (2020) and the current version:
 
-| Original (2020) | Actual | Descripción |
+| Original (2020) | Current | Description |
 |---|---|---|
-| `specan()` | `spectro_analysis()` | Extracción de parámetros acústicos |
-| `xcorr()` | `cross_correlation()` | Correlación cruzada tiempo-frecuencia |
-| `read_wave()` | `read_sound_file()` | Lectura de archivos de audio |
+| `specan()` | `spectro_analysis()` | Acoustic parameter extraction |
+| `xcorr()` | `cross_correlation()` | Time-frequency cross-correlation |
+| `read_wave()` | `read_sound_file()` | Audio file reading |
 
-### Mejoras en la visualización
+### Visualization Improvements
 
-**Boxplots por categoría en lugar de scatter por índice:**
-El script original mostraba los parámetros acústicos como scatter plots donde el eje X era el índice de la muestra (posición arbitraria en la tabla). Esto no aportaba información útil. Los boxplots agrupados por categoría permiten comparar directamente cómo se distribuye cada parámetro entre tipos de sonido.
+**Category boxplots instead of index scatter plots:**
+The original script displayed acoustic parameters as scatter plots where the X axis was the sample index (an arbitrary position in the table). This provided no useful information. Category-grouped boxplots allow direct comparison of how each parameter is distributed across sound types.
 
-**Grafo de similitud con conexiones reales:**
-El script original usaba `graph.tree()`, que crea una estructura de árbol arbitraria donde las flechas no representan ninguna relación real entre los sonidos. El grafo actual usa `graph_from_adjacency_matrix()` con un umbral de similitud (correlación > 0.75), de modo que las conexiones representan similitud acústica real.
+**Similarity graph with real connections:**
+The original script used `graph.tree()`, which creates an arbitrary tree structure where arrows represent no real relationship between sounds. The current graph uses `graph_from_adjacency_matrix()` with a similarity threshold (correlation > 0.75), so that connections represent actual acoustic similarity.
 
-### Limpieza del código
+### Code Cleanup
 
-- Eliminadas librerías no utilizadas (`imager`, `knitr`).
-- Eliminada la llamada a `install.packages()` dentro del script.
-- Eliminados paths hardcodeados; se usa `file.path(getwd(), ...)` para portabilidad.
-- Eliminado código duplicado y comentado.
-- Reorganizado en secciones numeradas con un flujo lineal claro.
-- Añadido `parallel = 4` en la cross-correlation para mejor rendimiento.
+- Removed unused libraries (`imager`, `knitr`).
+- Removed `install.packages()` calls from within the script.
+- Removed hardcoded paths; uses `file.path(getwd(), ...)` for portability.
+- Removed duplicate and commented-out code.
+- Reorganized into numbered sections with a clear linear flow.
+- Added `parallel = 4` in cross-correlation for better performance.
 
-## Origen y contexto académico
+## License
 
-Este proyecto es el resultado del Trabajo de Fin de Máster (TFM) del [Máster en Business Intelligence y Data Science de IEBS](https://accounts.iebschool.com/mi-diploma/abaa0886b52591b851a33c17b4653f20/) (octubre 2020), por Alberto Jiménez Rodríguez.
-
-El máster estaba orientado al ámbito empresarial y de emprendimiento. Sin embargo, al no tener experiencia directa en ese campo, opté por trasladar los conceptos aprendidos a un dominio que conozco en profundidad: el audio y el diseño de sonido. La premisa era sencilla: si las técnicas de Machine Learning sirven para clasificar clientes, productos o patrones de mercado, también pueden aplicarse para clasificar muestras de sonido según sus propiedades frecuenciales.
-
-Esta analogía no es forzada sino todo lo contrario. La reducción de dimensionalidad, el cálculo de distancias y la visualización de similitudes son herramientas agnósticas al dominio. Funcionan igual con datos financieros, genéticos o acústicos. Lo que cambia es la fuente de datos y la interpretación de los resultados, no la metodología.
-
-El resultado es un proyecto que demuestra la aplicación práctica de MDS y cross-correlation MFCC a un problema real del flujo de trabajo en diseño de sonido: identificar redundancias y relaciones de similitud dentro de grandes colecciones de muestras de audio.
-
-## Licencia
-
-Este proyecto es de uso educativo y de investigación.
+This project is for educational and research use.
