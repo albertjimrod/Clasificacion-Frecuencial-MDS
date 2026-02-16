@@ -1,5 +1,12 @@
 # Frequency Classification of Audio Samples via MDS
 
+[![R](https://img.shields.io/badge/R-4.0+-276DC3?style=flat-square&logo=r&logoColor=white)](https://www.r-project.org/)
+[![warbleR](https://img.shields.io/badge/warbleR-Bioacoustics-4CAF50?style=flat-square)](https://cran.r-project.org/package=warbleR)
+[![License](https://img.shields.io/badge/License-Educational-blue?style=flat-square)](#license)
+[![TFM](https://img.shields.io/badge/TFM-IEBS_2020-orange?style=flat-square)](https://accounts.iebschool.com/mi-diploma/abaa0886b52591b851a33c17b4653f20/)
+
+---
+
 ## Background
 
 This project is the result of the Master's Thesis (TFM) for the [Master in Business Intelligence and Data Science at IEBS](https://accounts.iebschool.com/mi-diploma/abaa0886b52591b851a33c17b4653f20/) (October 2020), by Alberto Jiménez Rodríguez.
@@ -9,6 +16,8 @@ The master's program was focused on business and entrepreneurship. However, rath
 This is not a forced analogy. Dimensionality reduction, distance calculation and similarity visualization are domain-agnostic tools. They work the same way with financial data, genetic data or acoustic data. What changes is the data source and the interpretation of the results, not the methodology.
 
 The outcome is a project that demonstrates the practical application of MDS and MFCC cross-correlation to a real problem in sound design workflows: identifying redundancies and similarity relationships within large audio sample collections.
+
+---
 
 ## Project Description
 
@@ -34,6 +43,8 @@ Concretely:
 
 The axes remain abstract coordinates, but the relative distances hold the information: two posts that are close on the map share performance characteristics; two that are far apart behave differently with the audience. The tool does not change. The data source does.
 
+---
+
 ## What Does This Project Do?
 
 It analyzes a set of WAV audio files (8-bit video game sound effects) and visualizes their acoustic similarity relationships. The pipeline is:
@@ -44,11 +55,20 @@ It analyzes a set of WAV audio files (8-bit video game sound effects) and visual
 4. **Multidimensional Scaling (MDS)** — reduces those distances to 2 dimensions for visualization.
 5. **Visualization** — category boxplots, similarity graph and MDS scatter plot.
 
+---
+
 ## Results
+
+> **Dataset:** 55 WAV files, 8-bit video game sound effects, organized into named categories (`Gunner`, `Scanner`, `Teletransport`, `Digital_Life_Forms`, `Photon Canyon`, `ocean`, `Freezing`, `Level`).
+> All three visualizations are complementary: the boxplots explain *why* sounds cluster, the scatter plot shows *where* they cluster, and the graph shows *which* specific sounds are connected.
+
+---
 
 ### MDS Scatter Plot
 
 ![MDS Scatter Plot](Scatter%20MDS.png)
+
+> Each point is a sound file. Distance between points = acoustic dissimilarity. Closer = more similar.
 
 Think of each sound as a "recipe" with many ingredients (mean frequency, entropy, spectral peak, etc.). With over 20 ingredients, direct visualization is impossible.
 
@@ -58,7 +78,7 @@ It works like a city map: you don't need exact latitude and longitude, only that
 
 **Important:** The axes (V1, V2) have no concrete meaning. It's not "right = high-pitched" or "up = bass". They are abstract coordinates. If you rotated the chart 90 degrees, it would be equally valid. The information lies in the **relative distances** between points, not their absolute position.
 
-Key observations:
+**Key observations:**
 - **Gunner** samples (gunshot sounds) cluster in the lower left: they are variations of the same type of sound.
 - **Digital_Life_Forms** form their own cluster on the right, far from the rest.
 - **Photon Canyon** samples are isolated in the upper right: they are unique sounds in the collection.
@@ -70,13 +90,15 @@ Key observations:
 
 ![Category Boxplots](category_Boxplots.png)
 
+> Each panel shows the distribution of one acoustic parameter across all sound categories. These are the raw features that drive the distances in the MDS map.
+
 These show how each acoustic parameter is distributed within each sound category. They allow you to:
 
 - **Detect outliers**: sounds that are acoustically very different from the rest of their group.
 - **Evaluate variance**: if a parameter has low dispersion, it provides no discriminant power to the model.
 - **Understand the MDS**: categories with similar parameters will be close together on the 2D map.
 
-Key observations:
+**Key observations:**
 - **Scanner** has the highest mean frequency (~11 kHz) and an enormous spectral peak (~2000): it is a sharp sound with a very pronounced spectral peak.
 - **ocean** has low mean frequency and low spectral entropy: it is a "flatter", deeper sound.
 - **Teletransport** has the widest boxes across almost all parameters: it is the category with the greatest internal acoustic diversity.
@@ -87,6 +109,8 @@ Key observations:
 
 ![Similarity Graph](similitud_muestras.png)
 
+> Nodes = individual sound files. Edges = MFCC correlation > 75%. If two nodes are connected, they are acoustically similar. Isolated nodes have no equivalent in the collection.
+
 Unlike the scatter plot, the graph explicitly shows **which sounds are similar to which**:
 
 - **Nodes** = sound files, colored by category.
@@ -94,28 +118,32 @@ Unlike the scatter plot, the graph explicitly shows **which sounds are similar t
 - **Position** = determined by MDS, same as the scatter plot.
 - **Isolated nodes (no edges)** = acoustically unique sounds in the collection.
 
-Key observations:
+**Key observations:**
 - The **center** has a densely connected core (Scanner, ocean, Teletransport, Freezing...): these are the most "generic" sounds in the pack, sharing frequency characteristics.
 - **Gunner** samples are grouped on the right but **with no connections to the center**: they sound similar to each other but are acoustically distinct from everything else.
 - **Photon Canyon** is isolated at the top: both samples connect to each other but to nothing else.
 - **Digital_Life_Forms (1)** is completely isolated: it is the most different sound in the entire collection.
 
+---
+
 ## Project Structure
 
 ```
 Clasificacion-Frecuencial-MDS/
-├── Frecuencial_classification.R    # Main analysis script
+├── Frecuencial_classification.R    # Main analysis script (full pipeline)
 ├── README.md
 ├── .gitignore
-├── Clasificación_frecuencial.pdf   # Original thesis document
-├── category_Boxplots.png           # Category boxplots
-├── similitud_muestras.png          # Acoustic similarity graph
-├── Scatter MDS.png                 # MDS scatter plot
-└── TFM_iebs/                       # Original thesis project
+├── Clasificación_frecuencial.pdf   # Original thesis document (Spanish)
+├── category_Boxplots.png           # Output — acoustic parameter boxplots by category
+├── similitud_muestras.png          # Output — MFCC similarity graph
+├── Scatter MDS.png                 # Output — MDS 2D scatter plot
+└── TFM_iebs/                       # Original thesis project (2020)
     ├── Data/
     │   └── 8bits/                  # 55 WAV files (not included, see setup)
     └── Script/                     # Original scripts and documentation
 ```
+
+---
 
 ## Setup and Execution
 
@@ -145,6 +173,8 @@ Open R or RStudio with the working directory set to the project root and execute
 source("Frecuencial_classification.R")
 ```
 
+---
+
 ## Technical Methodology
 
 ### Multidimensional Scaling (MDS)
@@ -160,8 +190,20 @@ Mel-Frequency Cepstral Coefficients are a representation of the short-term power
 ```
 WAV files → spectro_analysis() → acoustic parameters → boxplots
          → cross_correlation() → MFCC matrix → dist() → cmdscale() → MDS scatter
-                                              → similarity → igraph network
+                                              → similarity threshold → igraph network
 ```
+
+### Tech Stack
+
+| Category | Tool | Role |
+|----------|------|------|
+| Audio analysis | `tuneR`, `seewave` | WAV file reading and spectral analysis |
+| Bioacoustics | `warbleR`, `NatureSounds` | Acoustic parameter extraction and MFCC cross-correlation |
+| Network graph | `igraph` | Similarity graph construction and layout |
+| Clustering | `cluster` | Distance matrix computation |
+| Visualisation | `ggplot2`, `ggfortify` | Boxplots and MDS scatter plot |
+
+---
 
 ## Changes from the Original Project (2020)
 
@@ -191,6 +233,15 @@ The original script used `graph.tree()`, which creates an arbitrary tree structu
 - Removed duplicate and commented-out code.
 - Reorganized into numbered sections with a clear linear flow.
 - Added `parallel = 4` in cross-correlation for better performance.
+
+---
+
+## Author
+
+**Alberto Jiménez Rodríguez** — [datablogcafe.com](https://datablogcafe.com) | [GitHub](https://github.com/albertjimrod)
+Master in Business Intelligence and Data Science — IEBS (2020)
+
+---
 
 ## License
 
