@@ -18,6 +18,22 @@ This work is methodical and artisanal, and the volume of sound files generated f
 
 **A tool that analyzes samples from a frequency perspective and determines whether similarity exists between them saves time in creative decision-making.** It reveals the frequency predominance of the set and therefore the timbral character of that group of samples.
 
+### Applications Beyond Audio
+
+#### Same clustering approach optimizes social media content mix
+
+The methodology is domain-agnostic. The same pipeline that identifies redundant audio samples — extract parameters, compute similarity, reduce dimensions, visualize clusters — can identify redundant content strategies.
+
+Applied to social media, each post becomes a "sample": instead of mean frequency or spectral entropy, the parameters are engagement rate, reach, content type, posting time, or topic. This MDS algorithm clusters audio samples by frequency similarity. Applied to social media, it clusters posts by performance patterns, identifies content gaps, and optimizes posting mix.
+
+Concretely:
+
+- **Clusters of similar-performing posts** reveal which content types are redundant — the equivalent of sounds that overlap in the center of the similarity graph because they share too many characteristics.
+- **Isolated nodes** represent unique content that stands out from the rest. On social media, these are the posts worth doubling down on.
+- **Content gaps** appear as empty regions in the MDS scatter plot: areas where no posts currently land, but where the distances suggest there is room for a distinct content type.
+
+The axes remain abstract coordinates, but the relative distances hold the information: two posts that are close on the map share performance characteristics; two that are far apart behave differently with the audience. The tool does not change. The data source does.
+
 ## What Does This Project Do?
 
 It analyzes a set of WAV audio files (8-bit video game sound effects) and visualizes their acoustic similarity relationships. The pipeline is:
