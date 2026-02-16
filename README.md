@@ -241,6 +241,8 @@ The original script used `graph.tree()`, which creates an arbitrary tree structu
 **Alberto Jiménez Rodríguez** — [datablogcafe.com](https://datablogcafe.com) | [GitHub](https://github.com/albertjimrod)
 Master in Business Intelligence and Data Science — IEBS (2020)
 
+**Repository:** [github.com/albertjimrod/Clasificacion-Frecuencial-MDS](https://github.com/albertjimrod/Clasificacion-Frecuencial-MDS)
+
 ---
 
 ## License
