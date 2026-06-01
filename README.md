@@ -187,10 +187,16 @@ Mel-Frequency Cepstral Coefficients are a representation of the short-term power
 
 ### Analysis Pipeline
 
-```
-WAV files → spectro_analysis() → acoustic parameters → boxplots
-         → cross_correlation() → MFCC matrix → dist() → cmdscale() → MDS scatter
-                                              → similarity threshold → igraph network
+```mermaid
+flowchart TD
+    WAV[WAV files\n55 samples] --> SA["spectro_analysis()\nacoustic parameters"]
+    SA --> BOX[Category Boxplots\nmean freq · entropy · skewness]
+    WAV --> XC["cross_correlation()\nMFCC matrix"]
+    XC --> DM["dist()\nEuclidean distance matrix"]
+    DM --> MDS["cmdscale()\nMDS 2D reduction"]
+    MDS --> SCATTER[MDS Scatter Plot\n2D similarity map]
+    DM --> SIM[similarity threshold\ncorrelation > 0.75]
+    SIM --> NET[igraph network\nSimilarity Graph]
 ```
 
 ### Tech Stack
